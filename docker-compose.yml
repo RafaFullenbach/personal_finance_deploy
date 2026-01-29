@@ -1,0 +1,24 @@
+services:
+  api:
+    image: ghcr.io/rafafullenbach/personal_finance/api:latest
+    container_name: pf-api
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Data Source=/data/personal-finance.db
+    volumes:
+      - pf_data:/data
+    restart: unless-stopped
+
+  web:
+    image: ghcr.io/rafafullenbach/personal_finance_frontend/frontend:latest
+    container_name: pf-web
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  pf_data:
